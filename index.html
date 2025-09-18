@@ -399,8 +399,8 @@
             errorMessage.style.display = 'none';
             
             try {
-                // Simulate API call (replace with actual email service integration)
-                await simulateEmailSubscription(email);
+                // Subscribe using SendGrid API
+                await subscribeToSendGrid(email);
                 
                 // Show success message
                 successMessage.style.display = 'block';
@@ -422,18 +422,21 @@
             }
         });
 
-        // Simulate email subscription (replace with actual service)
-        function simulateEmailSubscription(email) {
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    // Simulate 95% success rate
-                    if (Math.random() > 0.05) {
-                        resolve();
-                    } else {
-                        reject(new Error('Subscription failed'));
-                    }
-                }, 1500);
+        // SendGrid email subscription via Vercel API
+        async function subscribeToSendGrid(email) {
+            const response = await fetch('/api/subscribe', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email })
             });
+
+            if (!response.ok) {
+                throw new Error('Subscription failed');
+            }
+
+            return await response.json();
         }
 
         // Email validation
